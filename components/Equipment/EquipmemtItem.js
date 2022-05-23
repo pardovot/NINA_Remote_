@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Button, Pressable, Switch } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Button, Pressable, Switch, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
 
-const EquipmentItem = ({handleScreenTabClick, ip, equipmentName, savedProperties, innerProperties, shortendName}) => {
+const EquipmentItem = ({navigation, handleScreenTabClick, ip, equipmentName, savedProperties, innerProperties, shortendName}) => {
 
   const [isConnected, setIsConnected] = useState(false);
   const [equipmentData, setEquipmentData] = useState({});
+//   const isMounted = useRef(null);
 
   const lowerCaseEquipmentName = equipmentName.toLowerCase();
   
@@ -15,6 +16,9 @@ const EquipmentItem = ({handleScreenTabClick, ip, equipmentName, savedProperties
       fetchInterval = setInterval(() => {
           fetchEquipmentAPI();
       }, 3000);
+    return () => {
+        clearInterval(fetchInterval);
+    }
   }, []);
 
   const fetchEquipmentAPI = () => {
@@ -91,6 +95,9 @@ const EquipmentItem = ({handleScreenTabClick, ip, equipmentName, savedProperties
                 }
             })}
         </View>
+        <TouchableOpacity style={styles.MainMenuBtn}>
+            <Button title="Main Menu" onPress={() => navigation.navigate("MainView")}/>
+        </TouchableOpacity>
       </Pressable>
   )
 }
@@ -124,6 +131,11 @@ const styles = StyleSheet.create({
     property: {
         width: 120,
     },
+    MainMenuBtn: {
+        position: "absolute",
+        width: "15%",
+        right: "5%",
+    }
 });
 
 export default EquipmentItem;

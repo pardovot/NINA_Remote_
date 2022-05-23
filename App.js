@@ -3,8 +3,12 @@ import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-import FirstConnect from './components/FirstConnect';
+import MainView from './components/MainView';
 import Equipments from './components/Equipment/Equipments';
+import Sequencer from './components/Sequencer';
+import Imaging from './components/Imaging';
+import OptionsView from './components/Options/OptionsView';
+import LiveView from './components/LiveView';
 
 SystemNavigationBar.immersive();
 
@@ -18,11 +22,23 @@ const App = () => {
     <NavigationContainer>
       <StatusBar hidden translucate/>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
-        <Stack.Screen name="FirstConnect" >
-          {props => <FirstConnect {...props} ip={ip} setIP={setIP} />}
+        <Stack.Screen name="MainView" >
+          {props => <MainView {...props} ip={ip} setIP={setIP} />}
         </Stack.Screen>
         <Stack.Screen name="Equipments">
           {props => <Equipments {...props} ip={ip} />}
+        </Stack.Screen>
+        <Stack.Screen name="Sequencer">
+          {props => <Sequencer {...props} ip={ip} />}
+        </Stack.Screen>
+        <Stack.Screen name="Imaging">
+          {props => <Imaging {...props} ip={ip} />}
+        </Stack.Screen>
+        <Stack.Screen name="Options">
+          {props => <OptionsView {...props} ip={ip} />}
+        </Stack.Screen>
+        <Stack.Screen name="LiveView">
+          {props => <LiveView {...props} ip={ip} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
