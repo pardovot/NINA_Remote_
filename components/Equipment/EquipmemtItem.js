@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, Button, Pressable, Switch, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
+import { observer } from 'mobx-react-lite';
+import { useGlobalStore } from '../../mobx/GlobalStore';
 
-const EquipmentItem = ({navigation, handleScreenTabClick, ip, equipmentName, savedProperties, innerProperties, shortendName}) => {
+const EquipmentItem = observer(({navigation, equipmentName, savedProperties, innerProperties, shortendName}) => {
 
-  const [isConnected, setIsConnected] = useState(false);
+  const { ip, handleScreenTabClick } = useGlobalStore();
+  const [isItemConnected, setIsItemConnected] = useState(false);
   const [equipmentData, setEquipmentData] = useState({});
-//   const isMounted = useRef(null);
 
   const lowerCaseEquipmentName = equipmentName.toLowerCase();
-  
+
   let fetchInterval;
 
   useEffect(() => {
@@ -28,20 +30,21 @@ const EquipmentItem = ({navigation, handleScreenTabClick, ip, equipmentName, sav
         .then(json => {
             setEquipmentData(json.Response);
             if (json.Response.Connected) {
-                setIsConnected(true);
+                setIsItemConnected(true);
             } else {
-                setIsConnected(false);
+                setIsItemConnected(false);
             }
         })
-        .catch(err => {console.log(err); setIsConnected(false);});
+        .catch(err => {console.log(err); setIsItemConnected(false);});
       }
   }
 
   function PropertiesSet({property, value}) {
+    if (property == "Temperature") value = Number(value).toFixed(2).toString();
     return (
         <View style={styles.section}>
             <Text style={styles.property}>{property}:</Text>
-            {isConnected && <Text style={styles.value}>{value}</Text>}
+            {isItemConnected && <Text style={styles.value}>{value}</Text>}
         </View>
     )
   }
@@ -60,31 +63,22 @@ const EquipmentItem = ({navigation, handleScreenTabClick, ip, equipmentName, sav
     }, 500);
   }
 
-//   const getFetchJson = (address) => {
-//       return new Promise((resolve, reject) => {
-//           fetch(address)
-//           .then(response => response.json())
-//           .then(json => resolve(json))
-//           .catch(error => reject(error))
-//       });
-//   }
-
   const handleSwitch = () => {
-      if (isConnected) {
+      if (isItemConnected) {
           disconnectEquipment();
         } else {
         connectEquipment();
       }
   }
-    
+
   return (
-      <Pressable style={styles.container} onLongPress={() => handleScreenTabClick()}>
+      <Pressable style={styles.container} onLongPress={handleScreenTabClick}>
         <View>
-            <Switch style={styles.switch} value={isConnected} onValueChange={handleSwitch}/>
-            <Text style={isConnected ? styles.connectedText : styles.disconnectedText} >{isConnected ? "Connected" : "Disconnected"}</Text>
+            <Switch style={styles.switch} value={isItemConnected} onValueChange={handleSwitch}/>
+            <Text style={isItemConnected ? styles.connectedText : styles.disItemConnectedText} >{isItemConnected ? "Connected" : "Disconnected"}</Text>
         </View>
         <View style={styles.equipmentContainer}>
-            {isConnected && savedProperties.map((item, key) => {
+            {isItemConnected && savedProperties.map((item, key) => {
                 const obj = equipmentData[item];
                 if (obj && typeof obj == "object") {
                     return innerProperties.map((innerItem, key) => {
@@ -100,7 +94,7 @@ const EquipmentItem = ({navigation, handleScreenTabClick, ip, equipmentName, sav
         </TouchableOpacity>
       </Pressable>
   )
-}
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -121,7 +115,7 @@ const styles = StyleSheet.create({
     connectedText: {
         color: "green",
     },
-    disconnectedText: {
+    disItemConnectedText: {
         color: "red",
     },
     switch: {

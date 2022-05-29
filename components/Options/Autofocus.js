@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-export default function Autofocus({navigation, ip}) {
+export default function Autofocus({navigation}) {
   return (
     <View>
       <Text>Autofocus</Text>

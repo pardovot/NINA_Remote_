@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
+import { useGlobalStore } from '../../mobx/GlobalStore';
 
-export default function General({navigation, ip}) {
+export default function General({navigation}) {
 
+  const { ip, activeProfile } = useGlobalStore();
   const [profiles, setProfiles] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState('');
@@ -20,12 +22,10 @@ export default function General({navigation, ip}) {
   }
 
   useEffect(() => {
-    console.log(`http://${ip}:1888/api/get/profile?property=all`);
     fetch(`http://${ip}:1888/api/get/profile?property=all`)
     .then((response) => response.json())
     .then(json => {
         let profilesArr = [];
-        let profileNamesList = [];
         json.Response.forEach((profile) => {
             profilesArr.push({"Name": profile.Name, "IsActive": profile.isActive, "Id": profile.Id});
             profileNames.push(profile.Name);

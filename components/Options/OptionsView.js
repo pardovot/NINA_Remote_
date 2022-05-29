@@ -5,13 +5,14 @@ import General from './General';
 import EquipmentOptions from './EquipmentOptions';
 import Autofocus from './Autofocus';
 import ImagingOptions from './ImagingOptions';
+import { useGlobalStore } from '../../mobx/GlobalStore';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function OptionsView({navigation, ip}) {
+export default function OptionsView({navigation}) {
 
+  const { ip, activeProfile, setActiveProfile } = useGlobalStore();
   const [tabDisplay, setTabDisplay] = useState({ tabBarStyle: { position: 'absolute' }});
-  const [activeProfile, setActiveProfile] = useState({});
 
   const handleScreenTabClick = () => {
     console.log("Click");
@@ -32,18 +33,10 @@ export default function OptionsView({navigation, ip}) {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="General">
-        {props => <General {...props} navigation={navigation} ip={ip} activeProfile={activeProfile} />}
-      </Tab.Screen>
-      <Tab.Screen name="Equipment">
-        {props => <EquipmentOptions {...props} navigation={navigation} ip={ip} activeProfile={activeProfile} />}
-      </Tab.Screen>
-      <Tab.Screen name="Autofocus">
-        {props => <Autofocus {...props} navigation={navigation} ip={ip} />}
-      </Tab.Screen>
-      <Tab.Screen name="Imaging">
-        {props => <ImagingOptions {...props} navigation={navigation} ip={ip} />}
-      </Tab.Screen>
+      <Tab.Screen name="General" component={General}/>
+      <Tab.Screen name="Equipment" component={EquipmentOptions}/>
+      <Tab.Screen name="Autofocus" component={Autofocus}/>
+      <Tab.Screen name="Imaging" component={ImagingOptions}/>
     </Tab.Navigator>
   )
 }
@@ -55,3 +48,16 @@ const styles = StyleSheet.create({
     left: "5%",
   },
 });
+
+{/* <Tab.Screen name="General">
+{props => <General {...props} navigation={navigation} />}
+</Tab.Screen>
+<Tab.Screen name="Equipment">
+{props => <EquipmentOptions {...props} navigation={navigation} />}
+</Tab.Screen>
+<Tab.Screen name="Autofocus">
+{props => <Autofocus {...props} navigation={navigation} />}
+</Tab.Screen>
+<Tab.Screen name="Imaging">
+{props => <ImagingOptions {...props} navigation={navigation}  />}
+</Tab.Screen> */}

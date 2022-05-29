@@ -3,8 +3,8 @@ import EquipmentItem from './EquipmemtItem';
 
 const savedProperties = ["Name", "Gain", "Offset", "PixelSize", "DewHeaterOn", "Temperature", "CoolerOn", "CoolerPower"];
 
-export default function Camera({navigation, handleScreenTabClick, ip, equipmentName}) {
+export default function Camera({navigation, equipmentName}) {
   return (
-      <EquipmentItem navigation={navigation} handleScreenTabClick={handleScreenTabClick} ip={ip} equipmentName={equipmentName} savedProperties={savedProperties} />
+      <EquipmentItem navigation={navigation} equipmentName={equipmentName} savedProperties={savedProperties} />
   )
 }

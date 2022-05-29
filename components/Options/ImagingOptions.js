@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-export default function ImagingOptions({navigation, ip}) {
+export default function ImagingOptions({navigation}) {
   return (
     <View>
       <Text>ImagingOptions</Text>
