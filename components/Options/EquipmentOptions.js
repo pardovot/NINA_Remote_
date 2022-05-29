@@ -1,15 +1,20 @@
 import { StyleSheet, Text, View, TextInput, Switch } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { useGlobalStore } from '../../mobx/GlobalStore';
+import { observer } from 'mobx-react-lite';
 
-export default function EquipmentOptions({navigation, ip, activeProfile}) {
+export default observer(function EquipmentOptions({navigation}) {
   
-
-  const cameraSettings = activeProfile.CameraSettings;
-  const telescopeSettings = activeProfile.TelescopeSettings;
-
+  const { cameraSettings, telescopeSettings, setTelescopeSettings, setTelescopeProperty } = useGlobalStore();
+//   const cameraSettings = activeProfile.CameraSettings;
+//   const telescopeSettings = activeProfile.TelescopeSettings;
 
   const handleTextChange = () => {
 
+  }
+
+  const handleSyncSwitch = () => {
+    setTelescopeProperty("NoSync", !telescopeSettings.NoSync);
   }
 
   return (
@@ -18,7 +23,7 @@ export default function EquipmentOptions({navigation, ip, activeProfile}) {
             <Text>Pixel size:</Text>
             <TextInput defaultValue={cameraSettings?.PixelSize?.toString()}></TextInput>
             <Text style={{marginRight: 10}}>Bit depth:</Text>
-            <TextInput defaultValue={cameraSettings?.BitDepth.toString()}></TextInput>
+            <TextInput defaultValue={cameraSettings?.BitDepth?.toString()}></TextInput>
         </View>
         <View style={{flexDirection:"row-reverse", alignItems:'center', margin: 10}}>
             <Text>Telescope name:</Text>
@@ -28,13 +33,13 @@ export default function EquipmentOptions({navigation, ip, activeProfile}) {
             <Text style={{marginRight: 10}}>Focal ratio:</Text>
             <TextInput defaultValue={telescopeSettings?.FocalRatio?.toString()}></TextInput>
             <Text>Settle time after slew:</Text>
-            <TextInput defaultValue={telescopeSettings?.SettleTime.toString() + "s"}></TextInput>
+            <TextInput defaultValue={telescopeSettings?.SettleTime?.toString() + "s"}></TextInput>
             <Text style={{marginRight: 10}}>Do not sync:</Text>
-            <Switch value={telescopeSettings?.NoSync} onValueChange={(() => {telescopeSettings.NoSync = !telescopeSettings.NoSync})}/>
+            <Switch value={telescopeSettings?.NoSync} onValueChange={handleSyncSwitch}/>
         </View>
     </View>
   )
-}
+});
 
 const styles = StyleSheet.create({
     camera: {

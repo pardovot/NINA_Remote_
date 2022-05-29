@@ -1,81 +1,15 @@
 import { StyleSheet, Text, View, TextInput, TouchableHighlight, Button, Alert, ImageBackground } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import {Timeout} from '../utils/Timeout';
+import { observer } from 'mobx-react-lite';
+import { useGlobalStore } from '../mobx/GlobalStore';
 
-let interval;
+const FirstConnect = observer(({ navigation }) => {
 
-const FirstConnect = ({ navigation, ip, setIP }) => {
-    const [connected, setConnected] = useState('Disconnected');
-    const [isConnected, setIsConnected] = useState(false);
-    const [buttonTxt, setButtonTxt] = useState('Connect');
+    const { setIP, initializeWebsocket, isSocketConnected, client, killWebsocket } = useGlobalStore();
 
-
-    useEffect(() => {
-        keepConnectionAlive();
-        return (() => {
-            clearInterval(interval);
-        });
-    }, [])
-
-    const handleConnect = () => {
-        if (isConnected) {
-            setConnected("Disconnected");
-            setButtonTxt("Connect");
-            setIsConnected(false);
-            console.log("clear 1");
-            console.log(interval);
-            clearInterval(interval);
-        } else {
-            const reg = /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/;
-            if (reg.test(ip)) {
-                setConnected('Trying to connect...');
-                fetch(`http://${ip}:1888/api`, {signal: Timeout(5).signal})
-                .then((response) => {
-                    if (response.status == 200) {
-                        setConnected('Connected');
-                        setButtonTxt("Disconnect");
-                        setIsConnected(true);
-                        interval = setInterval(() => {
-                            keepConnectionAlive();
-                        }, 5000);
-                        console.log(interval);
-                    }
-                })
-                .catch((error) => {
-                    Alert.alert("Error", "Couldn't connect to address, please try again.", [{text: "Ok"}]);
-                    setConnected("Disconnected");
-                    setButtonTxt("Connect");
-                    setIsConnected(false);
-                    console.log(error);
-                });
-            } else {
-                Alert.alert("Error", "Invalid IP Address", [{text: "Ok"}]);
-                console.log("Invalid IP Address");
-            }
-        }
-    }
-
-    const keepConnectionAlive = () => {
-        console.log("KCA");
-        console.log(ip);
-        if (ip) {
-            console.log("KCA2");
-            fetch(`http://${ip}:1888/api`, {signal: Timeout(1).signal})
-            .then((response) => {
-                if (response.status == 200) {
-                    setConnected('Connected');
-                    setButtonTxt("Disconnect");
-                    setIsConnected(true);
-                }
-            })
-            .catch((error) => {
-                setConnected("Disconnected");
-                setButtonTxt("Connect");
-                setIsConnected(false);
-                console.log(error);
-            });
-        }
-    }
+    const connectedText = isSocketConnected ? "Connected" : client ? "Attempting to connect...." : "Disconnected";
+    const buttonTxt = isSocketConnected ? "Disconnect" : "Connect";
+    const attemptToConnect = !isSocketConnected && client;
 
     const handleTextChange = (text) => {
         setIP(text);
@@ -85,38 +19,57 @@ const FirstConnect = ({ navigation, ip, setIP }) => {
         navigation.navigate(screen);
     }
 
+    const handleConnectButton = () => {
+        if (isSocketConnected) {
+            client.close();
+        } else {
+            initializeWebsocket();
+        }
+    }
+
+    useEffect(() => {
+        if (!isSocketConnected) {
+            navigateTo("MainView");
+        }
+    }, [isSocketConnected])
+
     return (
-        <ImageBackground source={require('../background.jpg')} resizeMode="cover" imageStyle={{opacity: 0.3}} style={{ flex: 1, justifyContent: "center"}}>
+        <ImageBackground source={require('../public/background.jpg')} resizeMode="cover" imageStyle={{opacity: 0.3}} style={{ flex: 1, justifyContent: "center"}}>
         <View style={styles.mainContainer}>
-            <Text style={[styles.connectText, isConnected ? styles.connected : styles.notConnected]}>{connected}</Text>
+            <Text style={[styles.connectText, isSocketConnected ? styles.connected : styles.notConnected]}>{connectedText}</Text>
             <View style={styles.innerContainer}>
                 <Text style={styles.ipText}>IP Address:</Text>
                 <TextInput placeholder='IP address' style={styles.textInput} onChangeText={handleTextChange}></TextInput>
                 <TouchableHighlight style={styles.connectBtn}>
-                    <Button title={buttonTxt} onPress={() => handleConnect()} color={ isConnected ? "#2196F3" : "#f44336" } />
+                    <Button title={buttonTxt} onPress={handleConnectButton} color={ isSocketConnected ? "#f44336" : "#2196F3" } />
                 </TouchableHighlight>
             </View>
+            {attemptToConnect &&
+                <TouchableHighlight style={styles.killWebsocket}>
+                    <Button title="Kill Connection" onPress={killWebsocket} color={"#f44336"} />
+                    </TouchableHighlight>
+            }
             <View style={styles.menuContainer}>
-                { isConnected && <TouchableHighlight style={styles.menuBtn}>
+                { isSocketConnected && <TouchableHighlight style={styles.menuBtn}>
                     <Button title="Equipment" color={"green"} onPress={() => navigateTo("Equipments")}/>    
                 </TouchableHighlight>}
-                { isConnected && <TouchableHighlight style={styles.menuBtn}>
+                { isSocketConnected && <TouchableHighlight style={styles.menuBtn}>
                     <Button title="Sequencer" color={"green"} onPress={() => navigateTo("Sequencer")}/>    
                 </TouchableHighlight>}
-                { isConnected && <TouchableHighlight style={styles.menuBtn}>
+                { isSocketConnected && <TouchableHighlight style={styles.menuBtn}>
                     <Button title="Imaging" color={"green"} onPress={() => navigateTo("Imaging")}/>    
                 </TouchableHighlight>}
-                { isConnected && <TouchableHighlight style={styles.menuBtn}>
+                { isSocketConnected && <TouchableHighlight style={styles.menuBtn}>
                     <Button title="Options" color={"green"} onPress={() => navigateTo("Options")}/>    
                 </TouchableHighlight>}
-                { isConnected && <TouchableHighlight style={styles.menuBtn}>
+                { isSocketConnected && <TouchableHighlight style={styles.menuBtn}>
                     <Button title="Live View" color={"green"} onPress={() => navigateTo("LiveView")}/>    
                 </TouchableHighlight>}
             </View>
         </View>
         </ImageBackground>
     );
-}
+});
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -150,6 +103,11 @@ const styles = StyleSheet.create({
     connectBtn: {
         marginRight: 25,
         width: 125,
+    },
+    killWebsocket: {
+        marginTop: 20,
+        width: 135,
+        lineHeight: 800,
     },
     textInput: {
         backgroundColor: 'rgba(10,10,10,0.1)',
