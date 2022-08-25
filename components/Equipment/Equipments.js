@@ -32,17 +32,17 @@ const Equipment = observer(({navigation}) => {
   */
   return (
     <bottomTab.Navigator screenOptions={ tabDisplay }> 
-      <bottomTab.Screen name="Camera" options={{headerShown: false, tabBarIcon: () => {return (
+      <bottomTab.Screen name="Camera" options={{tabBarActiveTintColor: '#CA4545', headerShown: false, activeTintColor:"white", tabBarIcon: () => {return (
         <Image source={ require("../../public/camera-shutter.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
         )}}} >
           {props => <Camera {...props} navigation={navigation} equipmentName={"Camera"}/>}
       </bottomTab.Screen>
-      <bottomTab.Screen name="FilterWheel" options={{headerShown: false, tabBarIcon: () => {
+      <bottomTab.Screen name="FilterWheel" options={{tabBarActiveTintColor: '#CA4545', headerShown: false, tabBarIcon: () => {
         return <Image source={ require("../../public/FW.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
       }}} >
           {props => <FilterWheel {...props} navigation={navigation} equipmentName={"FilterWheel"}/>}
       </bottomTab.Screen>
-      <bottomTab.Screen name="Focuser" options={{headerShown: false, tabBarIcon: () => {
+      <bottomTab.Screen name="Focuser" options={{tabBarActiveTintColor: '#CA4545', headerShown: false, tabBarIcon: () => {
         return <Image source={ require("../../public/Focus.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
       }}} >
           {props => <Focuser {...props} navigation={navigation} equipmentName={"Focuser"}/>}

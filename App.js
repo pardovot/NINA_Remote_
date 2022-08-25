@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer  } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import MainView from './components/MainView';
@@ -15,10 +15,22 @@ SystemNavigationBar.immersive();
 
 const Stack = createNativeStackNavigator();
 
+const MyTheme = {
+  colors: {
+    background: "rgb(30, 30, 30)",
+    border: "rgb(39, 39, 41)",
+    card: "rgb(18, 18, 18)",
+    notification: "rgb(255, 69, 58)",
+    primary: "rgb(10, 132, 255)",
+    text: "rgb(229, 229, 231)"
+  },
+  dark: true
+}
+
 const App = observer(() => {
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <StatusBar hidden translucate/>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name="MainView" >

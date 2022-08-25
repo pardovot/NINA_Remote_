@@ -11,7 +11,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function OptionsView({navigation}) {
 
-  const { ip, activeProfile, setActiveProfile } = useGlobalStore();
+  const { ip, activeProfile, setActiveProfile, fetchData } = useGlobalStore();
   const [tabDisplay, setTabDisplay] = useState({ tabBarStyle: { position: 'absolute' }});
 
   const handleScreenTabClick = () => {
@@ -25,10 +25,17 @@ export default function OptionsView({navigation}) {
   }
 
   useEffect(() => {
-    fetch(`http://${ip}:1888/api/get/profile?property=active`)
-    .then((response) => response.json())
-    .then(json => setActiveProfile(json.Response))
-    .catch(error => console.log(error));
+    (async() => {
+      const { json } = await fetchData("profile?property=active");
+      setActiveProfile(json.Response);
+    })();
+    // const fetchData = async() => {
+    //   fetch(`http://${ip}:1888/api/profile?property=active`)
+    // }
+    // fetch(`http://${ip}:1888/api/profile?property=active`)
+    // .then((response) => response.json())
+    // .then(json => setActiveProfile(json.Response))
+    // .catch(error => console.log(error));
   }, [])
 
   return (

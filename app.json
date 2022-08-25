@@ -1,4 +1,5 @@
 {
   "name": "NINA_Remote",
-  "displayName": "NINA Remote"
+  "displayName": "NINA Remote",
+  "userInterfaceStyle": "dark"
 }

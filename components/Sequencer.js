@@ -16,6 +16,6 @@ const styles = StyleSheet.create({
   MainMenuBtn: {
     position: "absolute",
     width: "15%",
-    left: "5%",
+    right: "5%",
   },
 });

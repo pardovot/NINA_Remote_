@@ -5,7 +5,7 @@ import { useGlobalStore } from '../../mobx/GlobalStore';
 
 const EquipmentItem = observer(({navigation, equipmentName, savedProperties, innerProperties, shortendName}) => {
 
-  const { ip, handleScreenTabClick } = useGlobalStore();
+  const { ip, handleScreenTabClick, fetchData, fetchPost } = useGlobalStore();
   const [isItemConnected, setIsItemConnected] = useState(false);
   const [equipmentData, setEquipmentData] = useState({});
 
@@ -23,19 +23,16 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
     }
   }, []);
 
-  const fetchEquipmentAPI = () => {
+  const fetchEquipmentAPI = async () => {
       if (ip) {
-        fetch(`http://${ip}:1888/api/get/equipment?property=${lowerCaseEquipmentName}`)
-        .then(response => response.json())
-        .then(json => {
-            setEquipmentData(json.Response);
-            if (json.Response.Connected) {
-                setIsItemConnected(true);
-            } else {
-                setIsItemConnected(false);
-            }
-        })
-        .catch(err => {console.log(err); setIsItemConnected(false);});
+        const { json } = await fetchData(`equipment?property=${lowerCaseEquipmentName}`);
+        setEquipmentData(json.Response);
+        if (json.Response.Connected) {
+            setIsItemConnected(true);
+        } else {
+            setIsItemConnected(false);
+        }
+        // .catch(err => {console.log(err); setIsItemConnected(false);});
       }
   }
 
@@ -49,18 +46,40 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
     )
   }
 
-  const connectEquipment = () => {
-    fetch(`http://${ip}:1888/api/set/equipment?property=${lowerCaseEquipmentName}&parameter=connect`);
+  const connectEquipment = async () => {
+    const body = {
+        "Device": lowerCaseEquipmentName,
+        "Action": "connect"
+    }
+
+    await fetchPost("equipment", body);
+
     setTimeout(() => {
         fetchEquipmentAPI();
     }, 500);
+
+    // fetch(`http://${ip}:1888/api/equipment?property=${lowerCaseEquipmentName}&parameter=connect`);
+    // setTimeout(() => {
+    //     fetchEquipmentAPI();
+    // }, 500);
   }
 
-  const disconnectEquipment = () => {
-    fetch(`http://${ip}:1888/api/set/equipment?property=${lowerCaseEquipmentName}&parameter=disconnect`);
+  const disconnectEquipment = async () => {
+    const body = {
+        "Device": lowerCaseEquipmentName,
+        "Action": "disconnect"
+    }
+
+    await fetchPost("equipment", body);
+
     setTimeout(() => {
         fetchEquipmentAPI();
     }, 500);
+
+    // fetch(`http://${ip}:1888/api/set/equipment?property=${lowerCaseEquipmentName}&parameter=disconnect`);
+    // setTimeout(() => {
+    //     fetchEquipmentAPI();
+    // }, 500);
   }
 
   const handleSwitch = () => {
@@ -73,7 +92,7 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
 
   return (
       <Pressable style={styles.container} onLongPress={handleScreenTabClick}>
-        <View>
+        <View style={styles.switchView}>
             <Switch style={styles.switch} value={isItemConnected} onValueChange={handleSwitch}/>
             <Text style={isItemConnected ? styles.connectedText : styles.disItemConnectedText} >{isItemConnected ? "Connected" : "Disconnected"}</Text>
         </View>
@@ -99,7 +118,7 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         marginTop: 30,
         marginLeft: 30,
     },
@@ -109,7 +128,7 @@ const styles = StyleSheet.create({
     },
     section: {
         flex: 1,
-        flexDirection: 'row-reverse',
+        flexDirection: 'row',
         width: 200
     },
     connectedText: {
@@ -120,7 +139,10 @@ const styles = StyleSheet.create({
     },
     switch: {
         marginBottom: 5,
-        marginLeft: 15,
+        marginRight: 10,
+    },
+    switchView: {
+        marginRight: 40,
     },
     property: {
         width: 120,

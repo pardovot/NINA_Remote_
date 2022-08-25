@@ -5,16 +5,15 @@ import { useGlobalStore } from '../../mobx/GlobalStore';
 
 export default function General({navigation}) {
 
-  const { ip, activeProfile } = useGlobalStore();
+  const { ip, activeProfile, fetchPost, fetchData } = useGlobalStore();
   const [profiles, setProfiles] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState('');
   
-  const onSelect = (selectedItem, index) => {
+  const onSelect = async (selectedItem, index) => {
       const chosenProfile = profiles[index];
-      fetch(`http://${ip}:1888/api/set/profile?property=switch&parameter=${chosenProfile.Id}`)
-      .then(() => {setSelectedProfile(chosenProfile); console.log("ok")})
-      .catch(error => console.log(error));
+      const { response } = await fetchPost("profile", {"Device": "switch", "Action": chosenProfile.Id});
+      if (response.status == 200) setSelectedProfile(chosenProfile);
   }
 
   const buttonTextAfterSelection = (selectedItem, index) => {
@@ -22,9 +21,8 @@ export default function General({navigation}) {
   }
 
   useEffect(() => {
-    fetch(`http://${ip}:1888/api/get/profile?property=all`)
-    .then((response) => response.json())
-    .then(json => {
+    const fetchProfiles = async () => {
+        const { response, json } = await fetchData("profile?property=all");
         let profilesArr = [];
         json.Response.forEach((profile) => {
             profilesArr.push({"Name": profile.Name, "IsActive": profile.isActive, "Id": profile.Id});
@@ -32,8 +30,25 @@ export default function General({navigation}) {
             if (profile.IsActive) setSelectedProfile(profile);
         });
         setProfiles(profilesArr);
-    })
-    .catch((error) => console.log(error));
+    }
+
+    fetchProfiles().catch(console.error);
+
+    // const fetchData = async () => {
+    //     const response = await fetch(`http://${ip}:1888/api/profile?property=all`);
+    //     const json = await response.json();
+    //     console.log(json);
+    //     let profilesArr = [];
+    //     json.Response.forEach((profile) => {
+    //         profilesArr.push({"Name": profile.Name, "IsActive": profile.isActive, "Id": profile.Id});
+    //         profileNames.push(profile.Name);
+    //         if (profile.IsActive) setSelectedProfile(profile);
+    //     });
+    //     setProfiles(profilesArr);
+    //     return json;
+    // }
+
+    // fetchData().catch(console.error);
   }, []);
 
   return (
@@ -45,7 +60,7 @@ export default function General({navigation}) {
           <SelectDropdown
             data={profileNames}
             buttonTextStyle={styles.buttonTextStyle}
-            selectedItemStyle={styles.selectedItemStyle}
+            selectedRowTextStyle={styles.selectedRowTextStyle}
             defaultValue={selectedProfile.Name}
             buttonStyle={styles.buttonStyle}
             disableAutoScroll={true}
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     buttonTextStyle: {
         color: "#ff726f",
     },
-    selectedItemStyle: {
+    selectedRowTextStyle: {
         color: "#ff726f",
         fontWeight: "900",
     },

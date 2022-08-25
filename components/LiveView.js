@@ -8,14 +8,19 @@ let interval;
 export default function LiveView({navigation}) {
 
   const [image, setImage] = useState('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-  const { ip } = useGlobalStore();
+  const { ip, fetchPost } = useGlobalStore();
 
   useEffect(() => {
     interval = setInterval(() => {
-        fetch(`http://${ip}:1888/api/set/equipment?property=application&parameter=screenshot`)
-        .then(response => response.json())
-        .then(json => setImage("data:image/png;base64," +json.Response))
-        .catch(error => console.log(error));
+      const fetchImage = async() => {
+        const body = {
+          "Device": "application",
+          "Action": "screenshot"
+        }
+        const { response, json } = await fetchPost("equipment", body);
+        if (response.status == 200) setImage("data:image/png;base64," +json.Response);
+      }
+      fetchImage();
     }, 100);
     return (() => {
         clearInterval(interval);
