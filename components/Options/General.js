@@ -45,7 +45,7 @@ export default function General({navigation}) {
           <SelectDropdown
             data={profileNames}
             buttonTextStyle={styles.buttonTextStyle}
-            selectedItemStyle={styles.selectedItemStyle}
+            selectedRowTextStyle={styles.selectedRowTextStyle}
             defaultValue={selectedProfile.Name}
             buttonStyle={styles.buttonStyle}
             disableAutoScroll={true}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     buttonTextStyle: {
         color: "#ff726f",
     },
-    selectedItemStyle: {
+    selectedRowTextStyle: {
         color: "#ff726f",
         fontWeight: "900",
     },
