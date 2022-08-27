@@ -5,16 +5,19 @@ import { useGlobalStore } from '../../mobx/GlobalStore';
 
 export default function General({navigation}) {
 
-  const { ip, activeProfile } = useGlobalStore();
+  const { ip, activeProfile, fetchPost, fetchData } = useGlobalStore();
   const [profiles, setProfiles] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState('');
   
-  const onSelect = (selectedItem, index) => {
+  const onSelect = async (selectedItem, index) => {
       const chosenProfile = profiles[index];
-      fetch(`http://${ip}:1888/api/set/profile?property=switch&parameter=${chosenProfile.Id}`)
-      .then(() => {setSelectedProfile(chosenProfile); console.log("ok")})
-      .catch(error => console.log(error));
+      const body = {
+        "Device": "switch",
+        "Action": chosenProfile.Id
+      };
+      const { response } = await fetchPost("profile", body);
+      if (response.status == 200) setSelectedProfile(chosenProfile);
   }
 
   const buttonTextAfterSelection = (selectedItem, index) => {
@@ -22,9 +25,8 @@ export default function General({navigation}) {
   }
 
   useEffect(() => {
-    fetch(`http://${ip}:1888/api/get/profile?property=all`)
-    .then((response) => response.json())
-    .then(json => {
+    const fetchProfiles = async() => {
+        const { json } = await fetchData("profile?property=all");
         let profilesArr = [];
         json.Response.forEach((profile) => {
             profilesArr.push({"Name": profile.Name, "IsActive": profile.isActive, "Id": profile.Id});
@@ -32,8 +34,10 @@ export default function General({navigation}) {
             if (profile.IsActive) setSelectedProfile(profile);
         });
         setProfiles(profilesArr);
-    })
-    .catch((error) => console.log(error));
+    }
+
+    fetchProfiles();
+
   }, []);
 
   return (

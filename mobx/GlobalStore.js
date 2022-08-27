@@ -15,6 +15,7 @@ class GlobalStore {
     isTabHidden = false;
     cameraSettings = {};
     telescopeSettings = {};
+    autoRefreshImage = true;
 
     constructor() {
         makeObservable(this, {
@@ -27,6 +28,7 @@ class GlobalStore {
             isTabHidden: observable,
             cameraSettings: observable,
             telescopeSettings: observable,
+            autoRefreshImage: observable,
             setIP: action.bound,
             setEvent: action.bound,
             setIsSocketConnected: action.bound,
@@ -36,6 +38,10 @@ class GlobalStore {
             killWebsocket: action.bound,
             setTelescopeProperty: action.bound,
             handleScreenTabClick: action.bound,
+            setAutoRefreshImage: action.bound,
+            fetchLastImage: action.bound,
+            fetchPost: action.bound,
+            fetchData: action.bound,
         });
     }
 
@@ -88,6 +94,10 @@ class GlobalStore {
         this.isTabHidden = !this.isTabHidden;
     }
 
+    setAutoRefreshImage(newValue) {
+        this.autoRefreshImage = newValue;
+    }
+
     handleScreenTabClick() {
         this.setIsTabHidden();
     }
@@ -109,7 +119,7 @@ class GlobalStore {
                 const message = JSON.parse(evt.data).Response;
                 switch(message) {
                     case "NINA-NEW-IMAGE":
-                        this.fetchLastImage();
+                        if (this.autoRefreshImage) this.fetchLastImage();
                         break;
                     default:
                         break;
@@ -140,14 +150,42 @@ class GlobalStore {
         this.client = null;
     }
 
-    fetchLastImage = () => {
-        fetch(`http://${this.ip}:1888/api/get/equipment?property=image`)
-        .then(response => response.json())
-        .then(json => {
-          const image = json.Result.Response;
-          this.setBase64Image(image);
-        })
-        .catch(error => console.log(error));
+    fetchLastImage = async (scale = 5) => {
+        const { json } = await this.fetchData(`equipment?property=image&parameter=${scale}`);
+        if (json.Result.Response != "No Images Available") {
+            const image = json.Result.Response;
+            this.setBase64Image(image);
+        }
+    }
+
+    fetchData = async(endpoint) => {
+        try {
+            const response = await fetch(`http://${this.ip}:1888/api/${endpoint}`);
+            const json = await response.json();
+            // if (response.status != 200) throw new Error("Invalid status code");
+            return {response, json};
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    fetchPost = async (endpoint, body) => {
+        try {
+            const response = await fetch(`http://${this.ip}:1888/api/${endpoint}`,
+            
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body),
+            });
+            const json = await response.json();
+            // if (response.status != 200) throw new Error("Invalid status code");
+            return {response, json};
+        } catch(error) {
+            console.log(error)
+        };
     }
 
 }

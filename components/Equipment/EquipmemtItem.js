@@ -5,7 +5,7 @@ import { useGlobalStore } from '../../mobx/GlobalStore';
 
 const EquipmentItem = observer(({navigation, equipmentName, savedProperties, innerProperties, shortendName}) => {
 
-  const { ip, handleScreenTabClick } = useGlobalStore();
+  const { ip, handleScreenTabClick, fetchData, fetchPost } = useGlobalStore();
   const [isItemConnected, setIsItemConnected] = useState(false);
   const [equipmentData, setEquipmentData] = useState({});
 
@@ -23,19 +23,15 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
     }
   }, []);
 
-  const fetchEquipmentAPI = () => {
+  const fetchEquipmentAPI = async() => {
       if (ip) {
-        fetch(`http://${ip}:1888/api/get/equipment?property=${lowerCaseEquipmentName}`)
-        .then(response => response.json())
-        .then(json => {
-            setEquipmentData(json.Response);
-            if (json.Response.Connected) {
-                setIsItemConnected(true);
-            } else {
-                setIsItemConnected(false);
-            }
-        })
-        .catch(err => {console.log(err); setIsItemConnected(false);});
+        const { json } =  await fetchData(`equipment?property=${lowerCaseEquipmentName}`);
+        setEquipmentData(json.Response);
+        if (json.Response.Connected) {
+            setIsItemConnected(true);
+        } else {
+            setIsItemConnected(false);
+        }
       }
   }
 
@@ -49,26 +45,24 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
     )
   }
 
-  const connectEquipment = () => {
-    fetch(`http://${ip}:1888/api/set/equipment?property=${lowerCaseEquipmentName}&parameter=connect`);
+  const handleEquipmentConnection = async(action) => {
+    const body = {
+        "Device": lowerCaseEquipmentName,
+        "Action": action,
+    };
+
+    await fetchPost("equipment", body);
     setTimeout(() => {
         fetchEquipmentAPI();
     }, 500);
   }
 
-  const disconnectEquipment = () => {
-    fetch(`http://${ip}:1888/api/set/equipment?property=${lowerCaseEquipmentName}&parameter=disconnect`);
-    setTimeout(() => {
-        fetchEquipmentAPI();
-    }, 500);
-  }
-
-  const handleSwitch = () => {
+  const handleSwitch = async() => {
       if (isItemConnected) {
-          disconnectEquipment();
-        } else {
-        connectEquipment();
-      }
+        handleEquipmentConnection("disconnect");
+    } else {
+        handleEquipmentConnection("connect");
+    }
   }
 
   return (
