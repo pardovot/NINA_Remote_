@@ -1,20 +1,23 @@
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useGlobalStore } from '../../mobx/GlobalStore';
 
 export default function General({navigation}) {
 
-  const { ip, activeProfile } = useGlobalStore();
+  const { ip, activeProfile, fetchPost, fetchData } = useGlobalStore();
   const [profiles, setProfiles] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState('');
   
-  const onSelect = (selectedItem, index) => {
+  const onSelect = async (selectedItem, index) => {
       const chosenProfile = profiles[index];
-      fetch(`http://${ip}:1888/api/set/profile?property=switch&parameter=${chosenProfile.Id}`)
-      .then(() => {setSelectedProfile(chosenProfile); console.log("ok")})
-      .catch(error => console.log(error));
+      const body = {
+        "Device": "switch",
+        "Action": chosenProfile.Id
+      };
+      const { response } = await fetchPost("profile", body);
+      if (response.status == 200) setSelectedProfile(chosenProfile);
   }
 
   const buttonTextAfterSelection = (selectedItem, index) => {
@@ -22,9 +25,8 @@ export default function General({navigation}) {
   }
 
   useEffect(() => {
-    fetch(`http://${ip}:1888/api/get/profile?property=all`)
-    .then((response) => response.json())
-    .then(json => {
+    const fetchProfiles = async() => {
+        const { json } = await fetchData("profile?property=all");
         let profilesArr = [];
         json.Response.forEach((profile) => {
             profilesArr.push({"Name": profile.Name, "IsActive": profile.isActive, "Id": profile.Id});
@@ -32,12 +34,14 @@ export default function General({navigation}) {
             if (profile.IsActive) setSelectedProfile(profile);
         });
         setProfiles(profilesArr);
-    })
-    .catch((error) => console.log(error));
+    }
+
+    fetchProfiles();
+
   }, []);
 
   return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
           <TouchableOpacity style={styles.MainMenuBtn}>
               <Button title="Main Menu" onPress={() => navigation.navigate("MainView")}/>
           </TouchableOpacity>
@@ -45,15 +49,17 @@ export default function General({navigation}) {
           <SelectDropdown
             data={profileNames}
             buttonTextStyle={styles.buttonTextStyle}
-            selectedItemStyle={styles.selectedItemStyle}
+            rowTextStyle={styles.rowTextStyle}
+            selectedRowTextStyle={styles.selectedRowTextStyle}
             defaultValue={selectedProfile.Name}
             buttonStyle={styles.buttonStyle}
             disableAutoScroll={true}
             dropdownStyle={styles.dropdownStyle}
+            rowStyle={styles.rowStyle}
             onSelect={onSelect}
             buttonTextAfterSelection={buttonTextAfterSelection}
           />
-      </View>
+      </SafeAreaView>
   )
 }
 
@@ -75,15 +81,26 @@ const styles = StyleSheet.create({
     buttonTextStyle: {
         color: "#ff726f",
     },
-    selectedItemStyle: {
+    selectedRowTextStyle: {
         color: "#ff726f",
         fontWeight: "900",
     },
     buttonStyle: {
         marginTop: 5,
         width: 300,
+        color: "#13131",
+        backgroundColor: "#262626",
     },
     dropdownStyle: {
         height: 237,
+        backgroundColor: '#262626',
     },
+    rowStyle: {
+        backgroundColor: "#262626",
+        borderBottomColor: 'rgb(60, 60, 60)',
+    },
+    rowTextStyle: {
+        color: '#fff',
+        backgroundColor: "#262626",
+    }
 })
