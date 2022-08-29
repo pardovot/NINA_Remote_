@@ -93,7 +93,7 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         marginTop: 30,
         marginLeft: 30,
     },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     },
     section: {
         flex: 1,
-        flexDirection: 'row-reverse',
+        flexDirection: 'row',
         width: 200
     },
     connectedText: {

@@ -19,13 +19,13 @@ export default observer(function EquipmentOptions({navigation}) {
 
   return (
     <View>
-        <View style={{flexDirection:"row-reverse", alignItems:'center', margin: 10, borderColor: "red"}}>
+        <View style={{flexDirection:"row", alignItems:'center', margin: 10, borderColor: "red"}}>
             <Text>Pixel size:</Text>
             <TextInput defaultValue={cameraSettings?.PixelSize?.toString()}></TextInput>
             <Text style={{marginRight: 10}}>Bit depth:</Text>
             <TextInput defaultValue={cameraSettings?.BitDepth?.toString()}></TextInput>
         </View>
-        <View style={{flexDirection:"row-reverse", alignItems:'center', margin: 10}}>
+        <View style={{flexDirection:"row", alignItems:'center', margin: 10}}>
             <Text>Telescope name:</Text>
             <TextInput defaultValue={telescopeSettings?.Name?.toString()}></TextInput>
             <Text style={{marginRight: 10}}>Focal length:</Text>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     camera: {
         flex: 1,
         margin: 10,
-        flexDirection: "row-reverse"
+        flexDirection: "row"
     },
     telescope: {
         flex: 1,

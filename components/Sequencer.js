@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Sequencer({navigation, ip}) {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Sequencer</Text>
       <TouchableOpacity style={styles.MainMenuBtn} >
             <Button title="Main Menu" onPress={() => navigation.navigate("MainView")}/>
@@ -13,9 +13,15 @@ export default function Sequencer({navigation, ip}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    marginTop: 30,
+    marginLeft: 30,
+  },
   MainMenuBtn: {
     position: "absolute",
     width: "15%",
-    left: "5%",
+    right: "5%",
   },
 });

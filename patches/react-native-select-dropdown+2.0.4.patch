@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-select-dropdown/src/SelectDropdown.js b/node_modules/react-native-select-dropdown/src/SelectDropdown.js
+index f4a97e3..ec22cb9 100644
+--- a/node_modules/react-native-select-dropdown/src/SelectDropdown.js
++++ b/node_modules/react-native-select-dropdown/src/SelectDropdown.js
+@@ -209,7 +209,7 @@ const SelectDropdown = (
+       isVisible && (
+         <Modal
+           supportedOrientations={['portrait', 'landscape']}
+-          animationType="none"
++          animationType="fade"
+           transparent={true}
+           statusBarTranslucent={statusBarTranslucent || false}
+           visible={isVisible}>

@@ -58,6 +58,7 @@ export default function General({navigation}) {
             rowStyle={styles.rowStyle}
             onSelect={onSelect}
             buttonTextAfterSelection={buttonTextAfterSelection}
+            statusBarTranslucent={true}
           />
       </SafeAreaView>
   )
