@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useGlobalStore } from '../../mobx/GlobalStore';
@@ -41,7 +41,7 @@ export default function General({navigation}) {
   }, []);
 
   return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
           <TouchableOpacity style={styles.MainMenuBtn}>
               <Button title="Main Menu" onPress={() => navigation.navigate("MainView")}/>
           </TouchableOpacity>
@@ -60,7 +60,7 @@ export default function General({navigation}) {
             buttonTextAfterSelection={buttonTextAfterSelection}
             statusBarTranslucent={true}
           />
-      </SafeAreaView>
+      </View>
   )
 }
 
