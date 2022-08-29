@@ -129,6 +129,9 @@ class GlobalStore {
             this.client.onclose = (e) => {
                 console.log("onclose",e);
                 this.setIsSocketConnected(false);
+                if (e.reason == "terminate") {
+                    this.killWebsocket();
+                }
             };
 
             this.client.onerror = (e) => {

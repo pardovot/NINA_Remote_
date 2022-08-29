@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#12121280",
     },
     innerContainer: {
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         paddingLeft: 27,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     },
     menuContainer: {
         flex: 1,
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         marginTop: 100,
     }
 });
