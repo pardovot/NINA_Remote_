@@ -9,6 +9,6 @@ export default function DefaultText({text}) {
 
 const styles = StyleSheet.create({
     defaultText: {
-        marginRight: 10,
+        // marginRight: 10,
     }
 })

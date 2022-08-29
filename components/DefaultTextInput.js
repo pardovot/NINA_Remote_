@@ -10,7 +10,7 @@ export default function DefaultTextInput({text, defaultValue, additionalStyles})
 const styles = StyleSheet.create({
   textColor: {
     color: "gray",
-    paddingRight: 50,
+    paddingRight: "6%",
     marginTop: 1,
   }
 })
