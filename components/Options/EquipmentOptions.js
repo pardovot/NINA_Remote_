@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, TextInput, Switch } from 'react-native';
+import { StyleSheet, View, Switch } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useGlobalStore } from '../../mobx/GlobalStore';
 import { observer } from 'mobx-react-lite';
+import TextInput from '../DefaultTextInput';
+import Text from '../DefaultText';
 
 export default observer(function EquipmentOptions({navigation}) {
-  
+
   const { cameraSettings, telescopeSettings, setTelescopeSettings, setTelescopeProperty } = useGlobalStore();
 //   const cameraSettings = activeProfile.CameraSettings;
 //   const telescopeSettings = activeProfile.TelescopeSettings;
@@ -20,22 +22,22 @@ export default observer(function EquipmentOptions({navigation}) {
   return (
     <View>
         <View style={{flexDirection:"row", alignItems:'center', margin: 10, borderColor: "red"}}>
-            <Text>Pixel size:</Text>
-            <TextInput defaultValue={cameraSettings?.PixelSize?.toString()}></TextInput>
-            <Text style={{marginRight: 10}}>Bit depth:</Text>
+            <Text text={"Pixel size:"}/>
+            <TextInput additionalStyles={{paddingRight: 50, marginLeft: 10}} defaultValue={cameraSettings?.PixelSize?.toString()}></TextInput>
+            <Text text={"Bit depth:"}/>
             <TextInput defaultValue={cameraSettings?.BitDepth?.toString()}></TextInput>
         </View>
         <View style={{flexDirection:"row", alignItems:'center', margin: 10}}>
-            <Text>Telescope name:</Text>
+            <Text text={"Telescope Name:"}/>
             <TextInput defaultValue={telescopeSettings?.Name?.toString()}></TextInput>
-            <Text style={{marginRight: 10}}>Focal length:</Text>
+            <Text text={"Focal length:"}/>
             <TextInput defaultValue={telescopeSettings?.FocalLength?.toString()}></TextInput>
-            <Text style={{marginRight: 10}}>Focal ratio:</Text>
+            <Text text={"Focal ratio:"}/>
             <TextInput defaultValue={telescopeSettings?.FocalRatio?.toString()}></TextInput>
-            <Text>Settle time after slew:</Text>
+            <Text text={"Settle time after slew:"}/>
             <TextInput defaultValue={telescopeSettings?.SettleTime?.toString() + "s"}></TextInput>
-            <Text style={{marginRight: 10}}>Do not sync:</Text>
-            <Switch value={telescopeSettings?.NoSync} onValueChange={handleSyncSwitch}/>
+            <Text text={"Do not sync:"}/>
+            <Switch trackColor={{false: 'grey'}} value={telescopeSettings?.NoSync} onValueChange={handleSyncSwitch}/>
         </View>
     </View>
   )

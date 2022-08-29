@@ -68,7 +68,7 @@ const EquipmentItem = observer(({navigation, equipmentName, savedProperties, inn
   return (
       <Pressable style={styles.container} onLongPress={handleScreenTabClick}>
         <View>
-            <Switch style={styles.switch} value={isItemConnected} onValueChange={handleSwitch}/>
+            <Switch trackColor={{false: 'grey'}} style={styles.switch} value={isItemConnected} onValueChange={handleSwitch}/>
             <Text style={isItemConnected ? styles.connectedText : styles.disItemConnectedText} >{isItemConnected ? "Connected" : "Disconnected"}</Text>
         </View>
         <View style={styles.equipmentContainer}>

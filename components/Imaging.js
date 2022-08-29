@@ -49,7 +49,7 @@ export default observer(function Imaging({navigation}) {
           </TouchableOpacity>
           <Button title="REFRESH" onPress={fetchLastImage}/>
           <Text style={{marginTop: 20}}>Auto Refresh:</Text>
-          <Switch value={autoRefreshImage} onValueChange={handleRefreshToggle} style={{textAlign: "center"}}/>
+          <Switch trackColor={{false: 'grey'}} value={autoRefreshImage} onValueChange={handleRefreshToggle} style={{textAlign: "center"}}/>
         </View>
       </View>}
   </View>
