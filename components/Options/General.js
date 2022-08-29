@@ -56,6 +56,7 @@ export default function General({navigation}) {
             dropdownStyle={styles.dropdownStyle}
             onSelect={onSelect}
             buttonTextAfterSelection={buttonTextAfterSelection}
+            statusBarTranslucent={true}
           />
       </View>
   )
