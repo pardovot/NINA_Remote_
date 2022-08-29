@@ -34,12 +34,12 @@ const FirstConnect = observer(({ navigation }) => {
     }, [isSocketConnected])
 
     return (
-        <ImageBackground source={require('../public/background.jpg')} resizeMode="cover" imageStyle={{opacity: 0.3}} style={{ flex: 1, justifyContent: "center"}}>
+        <ImageBackground source={require('../public/background.jpg')} resizeMode="cover" imageStyle={{opacity: 1}} style={{ flex: 1, justifyContent: "center"}}>
         <View style={styles.mainContainer}>
             <Text style={[styles.connectText, isSocketConnected ? styles.connected : styles.notConnected]}>{connectedText}</Text>
             <View style={styles.innerContainer}>
                 <Text style={styles.ipText}>IP Address:</Text>
-                <TextInput placeholder='IP address' style={styles.textInput} onChangeText={handleTextChange}></TextInput>
+                <TextInput placeholder='IP address' style={styles.textInput} onChangeText={handleTextChange} placeholderTextColor={"gray"} ></TextInput>
                 <TouchableHighlight style={styles.connectBtn}>
                     <Button title={buttonTxt} onPress={handleConnectButton} color={ isSocketConnected ? "#f44336" : "#2196F3" } />
                 </TouchableHighlight>
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         opacity: 1,
+        backgroundColor: "#12121280",
     },
     innerContainer: {
         flexDirection: "row-reverse",
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
         width: 150,
         height: 50,
         textAlign: "center",
+        color: "red",
     },
     equipmentBtn: {
         textAlign: 'center',

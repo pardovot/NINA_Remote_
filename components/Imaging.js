@@ -1,13 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, Switch, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Button, Switch } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import FastImage from 'react-native-fast-image';
 import { useGlobalStore } from '../mobx/GlobalStore';
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import { observer } from 'mobx-react-lite';
 
 export default observer(function Imaging({navigation}) {
 
-  const { ip, base64Image, setBase64Image, autoRefreshImage, setAutoRefreshImage, fetchLastImage } = useGlobalStore();
+  const {  base64Image, autoRefreshImage, setAutoRefreshImage, fetchLastImage } = useGlobalStore();
   const defaultImage = require("../public/no-image.png");
   const [shouldButtonsShow, setShouldButtonsShow] = useState(true);
   const [buttonOpacity, setButtonOpcaity] = useState(1);
@@ -59,11 +58,7 @@ export default observer(function Imaging({navigation}) {
 
 const styles = StyleSheet.create({
   MainMenuBtn: {
-    // position: "absolute",
-    // width: "15%",
-    // right: "5%",
     marginBottom: 20,
-    // marginTop: 10,
   },
   image: {
     flex: 1,

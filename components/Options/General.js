@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useGlobalStore } from '../../mobx/GlobalStore';
@@ -41,7 +41,7 @@ export default function General({navigation}) {
   }, []);
 
   return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
           <TouchableOpacity style={styles.MainMenuBtn}>
               <Button title="Main Menu" onPress={() => navigation.navigate("MainView")}/>
           </TouchableOpacity>
@@ -49,16 +49,18 @@ export default function General({navigation}) {
           <SelectDropdown
             data={profileNames}
             buttonTextStyle={styles.buttonTextStyle}
+            rowTextStyle={styles.rowTextStyle}
             selectedRowTextStyle={styles.selectedRowTextStyle}
             defaultValue={selectedProfile.Name}
             buttonStyle={styles.buttonStyle}
             disableAutoScroll={true}
             dropdownStyle={styles.dropdownStyle}
+            rowStyle={styles.rowStyle}
             onSelect={onSelect}
             buttonTextAfterSelection={buttonTextAfterSelection}
             statusBarTranslucent={true}
           />
-      </View>
+      </SafeAreaView>
   )
 }
 
@@ -87,8 +89,19 @@ const styles = StyleSheet.create({
     buttonStyle: {
         marginTop: 5,
         width: 300,
+        color: "#13131",
+        backgroundColor: "#262626",
     },
     dropdownStyle: {
         height: 237,
+        backgroundColor: '#262626',
     },
+    rowStyle: {
+        backgroundColor: "#262626",
+        borderBottomColor: 'rgb(60, 60, 60)',
+    },
+    rowTextStyle: {
+        color: '#fff',
+        backgroundColor: "#262626",
+    }
 })
