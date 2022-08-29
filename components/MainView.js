@@ -21,7 +21,7 @@ const FirstConnect = observer(({ navigation }) => {
 
     const handleConnectButton = () => {
         if (isSocketConnected) {
-            client.close();
+            client.close(1000, "terminate");
         } else {
             initializeWebsocket();
         }
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     },
     connectBtn: {
         marginRight: 25,
+        paddingLeft: 20,
         width: 125,
     },
     killWebsocket: {
