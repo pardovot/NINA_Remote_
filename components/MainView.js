@@ -11,6 +11,9 @@ const FirstConnect = observer(({ navigation }) => {
     const buttonTxt = isSocketConnected ? "Disconnect" : "Connect";
     const attemptToConnect = !isSocketConnected && client;
 
+    const connectedColor = "#f44336";
+    const disconnectedColor = "#2196F3";
+
     const handleTextChange = (text) => {
         setIP(text);
     }
@@ -34,19 +37,19 @@ const FirstConnect = observer(({ navigation }) => {
     }, [isSocketConnected])
 
     return (
-        <ImageBackground source={require('../public/background.jpg')} resizeMode="cover" imageStyle={{opacity: 1}} style={{ flex: 1, justifyContent: "center"}}>
+        <ImageBackground source={require('../public/background.jpg')} resizeMode="cover" imageStyle={{opacity: 1}} style={styles.backgroundImage}>
         <View style={styles.mainContainer}>
             <Text style={[styles.connectText, isSocketConnected ? styles.connected : styles.notConnected]}>{connectedText}</Text>
             <View style={styles.innerContainer}>
                 <Text style={styles.ipText}>IP Address:</Text>
                 <TextInput placeholder='IP address' style={styles.textInput} onChangeText={handleTextChange} placeholderTextColor={"gray"} ></TextInput>
                 <TouchableHighlight style={styles.connectBtn}>
-                    <Button title={buttonTxt} onPress={handleConnectButton} color={ isSocketConnected ? "#f44336" : "#2196F3" } />
+                    <Button title={buttonTxt} onPress={handleConnectButton} color={ isSocketConnected ? connectedColor : disconnectedColor } />
                 </TouchableHighlight>
             </View>
             {attemptToConnect &&
                 <TouchableHighlight style={styles.killWebsocket}>
-                    <Button title="Kill Connection" onPress={killWebsocket} color={"#f44336"} />
+                    <Button title="Kill Connection" onPress={killWebsocket} color={disconnectedColor} />
                     </TouchableHighlight>
             }
             <View style={styles.menuContainer}>
@@ -134,6 +137,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginTop: 100,
+    },
+    backgroundImage: {
+        flex: 1,
+        justifyContent: "center",
     }
 });
 

@@ -5,9 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 export default observer(function EquipmentOptions({navigation}) {
   
-  const { cameraSettings, telescopeSettings, setTelescopeSettings, setTelescopeProperty } = useGlobalStore();
-//   const cameraSettings = activeProfile.CameraSettings;
-//   const telescopeSettings = activeProfile.TelescopeSettings;
+  const { cameraSettings, telescopeSettings, setTelescopeProperty } = useGlobalStore();
 
   const handleTextChange = () => {
 

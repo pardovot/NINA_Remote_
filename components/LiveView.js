@@ -34,9 +34,14 @@ export default function LiveView({navigation}) {
         source={{ uri: image, priority: FastImage.priority.high }}
         resizeMode={FastImage.resizeMode.contain}
         // resizeMode="contain"
-        style={{ flex: 1, justifyContent: "center"}}>
+        style={styles.fastImage}>
     </FastImage>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  fastImage: {
+    flex: 1,
+    justifyContent: "center",
+  }
+})

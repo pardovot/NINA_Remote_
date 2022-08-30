@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, Text, Button } from 'react-native';
+import { Image, View, Text, Button, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Camera from './Camera';
 import FilterWheel from './FilterWheel';
@@ -13,12 +13,13 @@ const Equipment = observer(({navigation}) => {
 
   const { isTabHidden } = useGlobalStore();
 
-  // const [isTabHidden, setIsTabHidden] = useState(false);
-  // const [tabDisplay, setTabDisplay] = useState({ tabBarStyle: { position: 'absolute' }});
+  const iconSize = 20;
+  const iconName = "cogs";
+  const iconColor = "red";
 
   const tabDisplay = isTabHidden ? 
-  { tabBarStyle: { position: 'absolute', display: 'none' }, tabBarIcon:() => <Icon size={ 20 } name={ 'cogs' } color={ 'red' }/>} :
-  { tabBarStyle: { position: 'absolute'}, tabBarIcon:() => <Icon size={ 20 } name={ 'cogs' } color={ 'red' }/> }
+  { tabBarStyle: styles.hidden, tabBarIcon:() => <Icon size={ iconSize } name={ iconName } color={ iconColor }/>} :
+  { tabBarStyle: styles.shown, tabBarIcon:() => <Icon size={ iconSize } name={ iconName } color={ iconColor }/> }
 
   // const handleScreenTabClick = () => {
   //   setIsTabHidden(!isTabHidden);
@@ -33,17 +34,17 @@ const Equipment = observer(({navigation}) => {
   return (
     <bottomTab.Navigator screenOptions={ tabDisplay }> 
       <bottomTab.Screen name="Camera" options={{headerShown: false, tabBarIcon: () => {return (
-        <Image source={ require("../../public/camera-shutter.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
+        <Image source={ require("../../public/camera-shutter.png")} style={styles.tab}/>
         )}}} >
           {props => <Camera {...props} navigation={navigation} equipmentName={"Camera"}/>}
       </bottomTab.Screen>
       <bottomTab.Screen name="FilterWheel" options={{headerShown: false, tabBarIcon: () => {
-        return <Image source={ require("../../public/FW.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
+        return <Image source={ require("../../public/FW.png")} style={styles.tab}/>
       }}} >
           {props => <FilterWheel {...props} navigation={navigation} equipmentName={"FilterWheel"}/>}
       </bottomTab.Screen>
       <bottomTab.Screen name="Focuser" options={{headerShown: false, tabBarIcon: () => {
-        return <Image source={ require("../../public/Focus.png")} style={{width: 32, height: 32, tintColor: "gray"}}/>
+        return <Image source={ require("../../public/Focus.png")} style={styles.tab}/>
       }}} >
           {props => <Focuser {...props} navigation={navigation} equipmentName={"Focuser"}/>}
       </bottomTab.Screen>
@@ -52,3 +53,18 @@ const Equipment = observer(({navigation}) => {
 });
 
 export default Equipment;
+
+const styles = StyleSheet.create({
+  tab: {
+    width: 32,
+    height: 32,
+    tintColor: "gray"
+  },
+  hidden: {
+    position: 'absolute',
+    display: 'none'
+  },
+  shown: {
+    position: 'absolute'
+  },
+})

@@ -11,18 +11,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function OptionsView({navigation}) {
 
-  const { ip, activeProfile, setActiveProfile, fetchData } = useGlobalStore();
-  const [tabDisplay, setTabDisplay] = useState({ tabBarStyle: { position: 'absolute' }});
-
-  const handleScreenTabClick = () => {
-    console.log("Click");
-    setIsTabHidden(!isTabHidden);
-    if (isTabHidden) {
-        setTabDisplay({ tabBarStyle: { position: 'absolute', display: 'none' }, tabBarIcon:() => <Icon size={ 20 } name={ 'cogs' } color={ 'red' }/>});
-    } else {
-        setTabDisplay({ tabBarStyle: { position: 'absolute'}, tabBarIcon:() => <Icon size={ 20 } name={ 'cogs' } color={ 'red' }/> });
-    }
-  }
+  const { setActiveProfile, fetchData } = useGlobalStore();
 
   useEffect(() => {
     const fetchActiveProfile = async() => {
@@ -50,16 +39,3 @@ const styles = StyleSheet.create({
     left: "5%",
   },
 });
-
-{/* <Tab.Screen name="General">
-{props => <General {...props} navigation={navigation} />}
-</Tab.Screen>
-<Tab.Screen name="Equipment">
-{props => <EquipmentOptions {...props} navigation={navigation} />}
-</Tab.Screen>
-<Tab.Screen name="Autofocus">
-{props => <Autofocus {...props} navigation={navigation} />}
-</Tab.Screen>
-<Tab.Screen name="Imaging">
-{props => <ImagingOptions {...props} navigation={navigation}  />}
-</Tab.Screen> */}
