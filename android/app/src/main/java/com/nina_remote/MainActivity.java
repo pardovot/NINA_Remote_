@@ -6,6 +6,8 @@ import com.facebook.react.ReactRootView;
 import android.os.Bundle; // required for onCreate parameter
 import android.os.Build;
 import android.view.WindowManager;
+import android.os.Bundle; // needed for onCreate method
+import com.facebook.react.modules.i18nmanager.I18nUtil;
 
 public class MainActivity extends ReactActivity {
 
@@ -49,6 +51,8 @@ public class MainActivity extends ReactActivity {
           getWindow().setAttributes(layoutParams);
           getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
           getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+          I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
+          sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);
       }
        super.onCreate(savedInstanceState);
   }
